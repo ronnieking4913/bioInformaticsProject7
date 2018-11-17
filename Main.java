@@ -26,13 +26,115 @@ public class Main{
 
 			//
 			if(!(option.toUpperCase()).equals("Q")){
-				printNodes();
+
+				//for debug
+				//printNodes();
+				populateNodeScores();
+				printChildren();
+
 			}
 
 		}
 		while(!(option.toUpperCase()).equals("Q"));
 			System.out.println("Exiting the program...");
 
+	}
+
+	public static int findScore(String first, String second){
+
+		int max = 0;
+		int score = 0;
+		int cycle = 1;
+		int firstPointer = 1;
+		int secondPointer = 0;
+		int firstLen = first.length();
+		int secondLen = second.length();
+		char firstArr[] = first.toCharArray();
+		char secondArr[] = second.toCharArray();
+
+		//loop through to get all of the alignments
+		while(cycle < firstLen && cycle < secondLen){
+
+			//loop through to get the score of the alignment
+			while(firstPointer < firstLen && secondPointer < secondLen){
+
+				//if the characters are equal add to the score
+				if(firstArr[firstPointer] == secondArr[secondPointer]){
+
+					//increase the score 
+					score++;
+
+				}
+
+				//if the sequence is broken, set the score to 0 and exit the alignment
+				else{
+
+					score = 0;
+					firstPointer = firstLen;
+
+				}
+
+				//increase the second pointer
+				firstPointer++;
+				secondPointer++;
+
+			}
+
+			//if the score is more than the max, make the score the max
+			if(max < score)
+				max = score;
+
+			//increase the cycle
+			cycle++;
+
+			//reset the first, second pointer and score
+			firstPointer = cycle;
+			secondPointer = 0;
+			score = 0;
+
+
+		}
+
+		return max;
+
+	}
+
+	//populate the children nodes to find the paths
+	public static void populateNodeScores(){
+
+		int score = 0;
+		Node tmp = null;
+
+		//go through each node
+		for(int i = 0; i < NODE_LEN; i++){
+
+			//go through the other nodes
+			for(int j = 0; j < NODE_LEN; j++){
+
+				//if i ==j, move on
+				if(i == j){
+
+				}
+
+				//check the string
+				else{
+
+					score = findScore(NODES[i].getSequence(), NODES[j].getSequence());
+
+					//if the score isnt 0, create the node, add the score and make a child
+					if(score > 0){
+						tmp = new Node();
+						tmp.setScore(score);
+						tmp.setIndex(j);
+						NODES[i].addChild(tmp);
+					}
+
+					//for debug
+					//System.out.println("\ni: " + i + " j: " + j +  " Score: " + score);
+				}
+
+			}
+		}
 	}
 
 	public static String getFileName(){
@@ -95,7 +197,8 @@ public class Main{
 			//Read the contents of the file to create the return string
 			while((line = br.readLine()) != null){
 					
-				tmp= new Node(line);
+				tmp = new Node();
+				tmp.setSequence(line);
 				NODES[NODE_LEN] = tmp;
 				NODE_LEN++;
 				
@@ -122,5 +225,25 @@ public class Main{
 								NODES[i].getScore() + "\n");
 	}
 
+	//for debug
+	public static void printChildren(){
+
+		int length = 0;
+
+		for(int i = 0; i < NODE_LEN; i++){
+
+			length = NODES[i].getChildrenLen();
+			Node[] children= NODES[i].getChildren();
+			System.out.println("Node " + i + ":");
+
+			for(int j = 0; j < length; j++){
+				System.out.print("\tChild: " + children[j].getIndex() + " score: " + children[j].getScore());
+			}
+
+			System.out.println();
+
+		}
+
+	}
 
 }
