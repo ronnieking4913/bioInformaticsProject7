@@ -16,7 +16,7 @@ public class Main{
 	static int NODE_LEN = 0;
 
 	public static void main(String[] args){
-		
+
 		String option = "";
 
 		do{
@@ -31,7 +31,7 @@ public class Main{
 				//printNodes();
 				populateNodeScores();
 				printChildren();
-
+				findPath();
 			}
 
 		}
@@ -39,6 +39,44 @@ public class Main{
 			System.out.println("Exiting the program...");
 
 	}
+
+	//find the path
+	public static void findPath(){
+		int parent=0;
+		int child=0;
+		int max=0;
+		int temp=0;
+
+		//get the max node. place to start
+		//use DAG with lowest scores
+		int graph[][] = new int[NODE_LEN][NODE_LEN];
+		int sortGraph[][] = new int[NODE_LEN][NODE_LEN];
+		int length = 0;
+
+		for(int i = 0; i < NODE_LEN; i++){
+			length = NODES[i].getChildrenLen();
+			Node[] children= NODES[i].getChildren();
+			for(int j = 0; j < length; j++){
+				temp = children[j].getScore();
+				graph[i][j]=temp;
+				if(temp>max)
+					max=temp;
+			}
+		}
+		//edges = v-1
+		for(int count=0;count<length;count++){
+			for(int i = 0; i < NODE_LEN; i++){
+				length = NODES[i].getChildrenLen();
+				Node[] children= NODES[i].getChildren();
+				for(int j = 0; j < length; j++)
+					if (graph[i][j]==max){
+						count=count+1;
+						System.out.print("Edge: " + count +"\tNode: " + i +"\tDestination: " +j+ "\tDistance: " + graph[i][j] + "\n");
+					}
+			}
+		}
+	}
+
 
 	public static int findScore(String first, String second){
 
@@ -135,6 +173,7 @@ public class Main{
 
 			}
 		}
+		//find the scores
 	}
 
 	public static String getFileName(){
@@ -196,12 +235,11 @@ public class Main{
 
 			//Read the contents of the file to create the return string
 			while((line = br.readLine()) != null){
-					
 				tmp = new Node();
 				tmp.setSequence(line);
 				NODES[NODE_LEN] = tmp;
 				NODE_LEN++;
-				
+
 			}
 
 			file.close();
@@ -216,7 +254,7 @@ public class Main{
 		return input;
 
 	}
-	
+
 	//For debug
 	public static void printNodes(){
 		for(int i = 0; i < NODE_LEN; i++)
