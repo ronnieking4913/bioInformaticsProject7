@@ -16,7 +16,6 @@ public class Main{
 	static int NODE_LEN = 0;
 
 	public static void main(String[] args){
-
 		String option = "";
 
 		do{
@@ -74,8 +73,7 @@ public class Main{
 					if (graph[i][j]==max){
 						visited[i]=true;
 						visited[j]=true;
-						count++;
-						System.out.print("Edge: " + count +"\tNode: " + i +"\tDestination: " +j+ "\tDistance: " + graph[i][j] + "\n");
+						System.out.print("Edge \tNode: " + i +"\tDestination: " +j+ "\tDistance: " + graph[i][j] + "\n");
 					}
 				}
 			}
