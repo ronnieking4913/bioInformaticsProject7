@@ -46,7 +46,7 @@ public class Main{
 		int child=0;
 		int max=0;
 		int temp=0;
-
+		boolean visited[]=new boolean[NODE_LEN];
 		//get the max node. place to start
 		//use DAG with lowest scores
 		int graph[][] = new int[NODE_LEN][NODE_LEN];
@@ -64,16 +64,22 @@ public class Main{
 			}
 		}
 		//edges = v-1
-		for(int count=0;count<length;count++){
+		for(int count=0;count<NODE_LEN;count++){
 			for(int i = 0; i < NODE_LEN; i++){
 				length = NODES[i].getChildrenLen();
 				Node[] children= NODES[i].getChildren();
-				for(int j = 0; j < length; j++)
+				for(int j = 0; j < length; j++){
+					if((visited[i]==true)&&(visited[j]==true))
+						continue;
 					if (graph[i][j]==max){
-						count=count+1;
+						visited[i]=true;
+						visited[j]=true;
+						count++;
 						System.out.print("Edge: " + count +"\tNode: " + i +"\tDestination: " +j+ "\tDistance: " + graph[i][j] + "\n");
 					}
+				}
 			}
+			max--;
 		}
 	}
 
